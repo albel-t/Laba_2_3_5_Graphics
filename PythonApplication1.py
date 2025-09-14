@@ -174,10 +174,13 @@ class TableWindow:
                              command=self.new_window.destroy, font=('Arial', 10), bg='#333', fg='white')
         close_btn.pack(side='left', padx=5)
 
+data_directory = "D:\\projects\\VisualStudioCode\\Laba_2_3_5_Graphics\\data"
+selected_file = "D:\\projects\\VisualStudioCode\\Laba_2_3_5_Graphics\\data\\iait_17-18-1.06.02.xls"
+selected_file1 = "D:\\projects\\VisualStudioCode\\Laba_2_3_5_Graphics\\data\\iait_17-18-1.09.22.xls"
 def create_window():
     # Создаем новое окно
     new_window = tk.Toplevel()
-    TableWindow(new_window, parsing(), parsing('D:\\projects\\VisualStudioCode\\Laba_2_3_5_Graphics\\data\\iait_17-18-1.09.22.xls'))
+    TableWindow(new_window, parsing(selected_file), parsing(selected_file1))
 
 '''//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
 
@@ -194,13 +197,15 @@ def get_files_in_directory(directory="."):
 
 def on_file_selected(event):
     # Обработчик выбора файла
-    selected_file = file_combobox.get()
+    global selected_file
+    selected_file = data_directory + "\\" + file_combobox.get()
     if selected_file:
         print(f"выбран файл: {selected_file}")
 
 def on_file_selected1(event):
     # Обработчик выбора файла
-    selected_file1 = file_combobox1.get()
+    global selected_file1
+    selected_file1 = data_directory + "\\" + file_combobox1.get()
     if selected_file1:
         print(f"выбран файл: {selected_file1}")
 
@@ -267,7 +272,7 @@ window.photo = bg_photo
 window.photo = bg_photo1
 
 # Получаем список файлов в текущей директории
-files = get_files_in_directory()
+files = get_files_in_directory(data_directory)
 
 # виджеты
 btn1 = tk.Button(canvas, image=bg_photo1, cursor="hand2", command=create_window, activebackground="lightgreen", background="#c1fdc0") # кнопка

@@ -120,6 +120,7 @@ def parsing(path = 'D:\\projects\\VisualStudioCode\\Laba_2_3_5_Graphics\\data\\i
         if(sheet.cell_value(row, 0) != '') or (row == sheet.nrows-1):
             # print(f"old | new group: {group}|{sheet.cell_value(row, 0)}")
             if group != "":
+                print("group: " + group)
                 for day_name in ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ']:
                     if day_name not in tmp_schedule.days_even.keys():
                         for i in range(1, 7):

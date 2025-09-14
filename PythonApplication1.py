@@ -49,7 +49,7 @@ class TableWindow:
         frame1.pack(pady=20, padx=10, fill='both', expand=True)
         
         # Заголовок для первой таблицы
-        label1 = tk.Label(frame1, text="Таблица 1", font=('Arial', 14, 'bold'))
+        label1 = tk.Label(frame1, text=table1data.group, font=('Arial', 14, 'bold'))
         label1.pack(pady=(0, 10))
         
         # Первая таблица
@@ -74,7 +74,7 @@ class TableWindow:
         frame2.pack(pady=20, padx=10, fill='both', expand=True)
         
         # Заголовок для второй таблицы
-        label2 = tk.Label(frame2, text="Таблица 2", font=('Arial', 14, 'bold'))
+        label2 = tk.Label(frame2, text=table2data.group, font=('Arial', 14, 'bold'))
         label2.pack(pady=(0, 10))
         
         # Вторая таблица
@@ -120,8 +120,11 @@ class TableWindow:
                 colors = {"Identical" : ['green3', 'green2'], 
                           "Similar" : ['LightGoldenrod2', 'khaki1'],
                           "Different" : ['coral1', 'salmon']} 
-
-                table.insert('', 'end', values=values, tags=table_data.days_even[d].pairs[p].discrepancy + str(count%2))
+                if discrepancy_to_show[table_data.days_even[d].pairs[p].discrepancy]:
+                    this_tag = table_data.days_even[d].pairs[p].discrepancy
+                else:
+                    this_tag = 'White'
+                table.insert('', 'end', values=values, tags= this_tag + str(count%2))
 
         table.tag_configure('Identical0', background='green3')
         table.tag_configure('Identical1', background='green2')
@@ -129,6 +132,8 @@ class TableWindow:
         table.tag_configure('Similar1', background='khaki1')
         table.tag_configure('Different0', background='coral1')
         table.tag_configure('Different1', background='salmon')
+        table.tag_configure('White1', background='White')
+        table.tag_configure('White1', background='White')
         return table_data_check
     '''
     PaleGreen2 / green2
@@ -212,15 +217,18 @@ def on_file_selected1(event):
 x1 = 0
 x2 = 0
 x3 = 0
+discrepancy_to_show = {'Identical' : 0, 'Similar' : 0, 'Different' : 0}
 def on_button_click2():          # кнопка выбора 2
     print("Сравнить сходства")
     global x1
     if x1 == 0:
         btn2.config(background="lightgreen")
         x1 =+ 1
+        discrepancy_to_show['Identical'] = 1
     else:
         btn2.config(background="lightsteelblue")
         x1 = 0
+        discrepancy_to_show['Identical'] = 0
     
 def on_button_click3():          # кнопка выбора 3
     print("Сравнить различия")
@@ -228,9 +236,11 @@ def on_button_click3():          # кнопка выбора 3
     if x2 == 0:
         btn3.config(background="lightgreen")
         x2 =+ 1
+        discrepancy_to_show['Similar'] = 1
     else:
         btn3.config(background="lightsteelblue")
         x2 = 0
+        discrepancy_to_show['Similar'] = 0
     
 def on_button_click4():          # кнопка выбора 4
     print("Сравнить несоотствие")
@@ -238,9 +248,11 @@ def on_button_click4():          # кнопка выбора 4
     if x3 == 0:
         btn4.config(background="lightgreen")
         x3 =+ 1
+        discrepancy_to_show['Different'] = 1
     else:
         btn4.config(background="lightsteelblue")
         x3 = 0
+        discrepancy_to_show['Different'] = 0
 
 # окно
 window = tk.Tk()

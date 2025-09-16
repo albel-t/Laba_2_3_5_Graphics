@@ -142,7 +142,7 @@ def parsing(path = 'D:\\projects\\VisualStudioCode\\Laba_2_3_5_Graphics\\data\\i
 
         # for col in range(1, sheet.ncols):
             # print(f'[{row}][{col}] - [{sheet.cell_value(row, col)}]')
-    return schedules[0]
+    return schedules
     '''
     # Для pandas
     pip install pandas openpyxl xlrd

@@ -41,10 +41,14 @@ class TableWindow:
         self.create_tables(table1, table2)
         
         # Создаем кнопки для изменения цветов
-        self.create_buttons()
+        self.create_buttons(table1, table2)
     
-    def create_tables(self, table1data: schedule, table2data: schedule):
+    def create_tables(self, listtable1: list[schedule], listtable2: list[schedule], groupid1 = 0, groupid2 = 0):
         # Создаем фрейм для первой таблицы
+        if self.selected_group != '':
+            table1data = listtable1[groupid1]
+        # if self.selected_group1 == '':
+        #     table2data = listtable2[groupid2]
         frame1 = tk.Frame(self.new_window)
         frame1.pack(pady=20, padx=10, fill='both', expand=True)
         
@@ -152,32 +156,45 @@ class TableWindow:
 
     # def reset_colors(self):
 
-    def create_buttons(self):
+    def create_buttons(self, listtable1: list[schedule], listtable2: list[schedule]):
         """Создает кнопки для управления цветами"""
         button_frame = tk.Frame(self.new_window)
         button_frame.pack(pady=10)
-        
-        # # Кнопки для изменения цветов
-        # btn1 = tk.Button(button_frame, text="Изменить цвета Таблицы 1", 
-        #                 command=self.change_colors_table1, font=('Arial', 10), bg='#FFCCCB')
-        # btn1.pack(side='left', padx=5)
-        
-        # btn2 = tk.Button(button_frame, text="Изменить цвета Таблицы 2", 
-        #                 command=self.change_colors_table2, font=('Arial', 10), bg='#ADD8E6')
-        # btn2.pack(side='left', padx=5)
-        
-        # btn3 = tk.Button(button_frame, text="Изменить все цвета", 
-        #                 command=self.change_colors_both, font=('Arial', 10), bg='#90EE90')
-        # btn3.pack(side='left', padx=5)
-        
-        # btn4 = tk.Button(button_frame, text="Сбросить цвета", 
-        #                 command=self.reset_colors, font=('Arial', 10), bg='#f44336', fg='white')
-        # btn4.pack(side='left', padx=5)
-        
-        # Кнопка для закрытия окна
+        groups = []
+        groups1 = []
+        for i in listtable1:
+            groups.append(i.group)        
+        for i in listtable2:
+            groups1.append(i.group)
+
+        file_combobox = ttk.Combobox(self.new_window, values=groups, state="readonly", font=(20), cursor="hand2")
+        file_combobox.place(relx=0.1, rely=0.1, height=30, width=100, anchor="ne")
+        file_combobox.bind("<<ComboboxSelected>>", self.on_group_selected)
+
+
+        # file_combobox1 = ttk.Combobox(self.new_window, values=groups1, state="readonly", font=(20), cursor="hand2")
+        # file_combobox1.place(relx=1, rely=0.1, height=30, width=100, anchor="ne")
+        # file_combobox1.bind("<<ComboboxSelected>>", on_group_selected1)
+
         close_btn = tk.Button(button_frame, text="Закрыть", 
                              command=self.new_window.destroy, font=('Arial', 10), bg='#333', fg='white')
         close_btn.pack(side='left', padx=5)
+    # self.selected_group = ''
+    # self.selected_group1 = ''
+
+    def on_group_selected(self, event):
+        # Обработчик выбора файла
+        # global selected_group
+        self.create_tables(table1, table2)
+        self.selected_group = file_combobox.get()
+        if self.selected_group:
+            print(f"выбран файл: {self.selected_group}")
+
+# def on_group_selected1(event):
+#     # Обработчик выбора файла
+#     # global selected_group1
+#     if selected_group1:
+#         print(f"выбран файл: {selected_group1}")
 
 data_directory = "D:\\projects\\VisualStudioCode\\Laba_2_3_5_Graphics\\data"
 selected_file = "D:\\projects\\VisualStudioCode\\Laba_2_3_5_Graphics\\data\\iait_17-18-1.06.02.xls"

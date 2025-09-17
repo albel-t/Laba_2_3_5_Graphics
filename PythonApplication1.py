@@ -1,11 +1,21 @@
 ﻿import tkinter as tk
 from PIL import ImageTk, Image
 import os
+import sys
+
 from tkinter import ttk
 
 import random
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from laba_logging import *
+InitLogFile()
+
+
+InitFile(__file__)
+
 from main import *
+
 
 '''
     # Настраиваем заголовки столбцов для второй таблицы

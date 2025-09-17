@@ -32,32 +32,51 @@ class TableWindow:
         self.new_window.title("Таблицы с изменяемыми цветами")
         self.new_window.geometry("1200x700")
         self.new_window.minsize(1200, 700)
-        
+        self.groupid1 = 0
+        self.groupid2 = 0
         # Цветовые палитры
         # self.colors1 = ['#FF0000', '#00FF00', '0000FF']
+        self.label1 = None
+        self.frame1 = None
+        self.table1 = None
+
+        self.separator = None
         
-        
+        self.label2 = None
+        self.frame2 = None
+        self.table2 = None
+ 
+        self.listtable1 = table1
+        self.listtable2 = table2
+
+        self.parity = 0
+
+
+
         # Создаем таблицы
-        self.create_tables(table1, table2)
+        self.create_tables()
         
+
+
         # Создаем кнопки для изменения цветов
         self.create_buttons(table1, table2)
     
-    def create_tables(self, listtable1: list[schedule], listtable2: list[schedule], groupid1 = 0, groupid2 = 0):
-        # Создаем фрейм для первой таблицы
-        if self.selected_group != '':
-            table1data = listtable1[groupid1]
-        # if self.selected_group1 == '':
-        #     table2data = listtable2[groupid2]
-        frame1 = tk.Frame(self.new_window)
-        frame1.pack(pady=20, padx=10, fill='both', expand=True)
+    def create_tables(self): #, listtable1: list[schedule], listtable2: list[schedule]
+        # # Создаем фрейм для первой таблицы
+        # if self.current_table1 != None:
+            
+        # if self.current_table2 != None:
+
+        table1data = self.listtable1[self.groupid1]
+        table2data = self.listtable2[self.groupid2]
+        if self.frame1 == None:
+            self.frame1 = tk.Frame(self.new_window)
+        self.frame1.pack(pady=20, padx=10, fill='both', expand=True)
         
-        # Заголовок для первой таблицы
-        label1 = tk.Label(frame1, text=table1data.group, font=('Arial', 14, 'bold'))
-        label1.pack(pady=(0, 10))
         
         # Первая таблица
-        self.table1 = ttk.Treeview(frame1, columns=('col1', 'col2', 'col3', 'col4', 'col5'), show='headings', height=12)
+        if self.table1 == None:
+            self.table1 = ttk.Treeview(self.frame1, columns=('col1', 'col2', 'col3', 'col4', 'col5'), show='headings', height=12)
         
         # Настраиваем заголовки столбцов
         col_name = ["День недели", "№", 'Предмет', 'Тип Зан.', 'Преподаватель', 'Аудитория']
@@ -68,21 +87,30 @@ class TableWindow:
         # Заполняем первую таблицу данными
         table2data = self.fill_table(self.table1, table2data, table1data)
         self.table1.pack(fill='both', expand=True)
-        
+                # Заголовок для первой таблицы
+        if self.label1 == None:
+            self.label1 = tk.Label(self.frame1, text=table1data.group, font=('Arial', 14, 'bold'))
+        else:
+            self.label1.destroy()
+            self.label1 = tk.Label(self.frame1, text=table1data.group, font=('Arial', 14, 'bold'))
+        self.label1.pack(pady=(0, 10))
+
+
         # Разделитель между таблицами
-        separator = ttk.Separator(self.new_window, orient='horizontal')
-        separator.pack(fill='x', padx=20, pady=20)
+        if self.separator == None:
+            self.separator = ttk.Separator(self.new_window, orient='horizontal')
+        self.separator.pack(fill='x', padx=20, pady=20)
         
+
+
         # Создаем фрейм для второй таблицы
-        frame2 = tk.Frame(self.new_window)
-        frame2.pack(pady=20, padx=10, fill='both', expand=True)
-        
-        # Заголовок для второй таблицы
-        label2 = tk.Label(frame2, text=table2data.group, font=('Arial', 14, 'bold'))
-        label2.pack(pady=(0, 10))
+        if self.frame2 == None:
+            self.frame2 = tk.Frame(self.new_window)
+        self.frame2.pack(pady=20, padx=10, fill='both', expand=True)
         
         # Вторая таблица
-        self.table2 = ttk.Treeview(frame2, columns=('col1', 'col2', 'col3', 'col4', 'col5'), show='headings', height=12)
+        if self.table2 == None:
+            self.table2 = ttk.Treeview(self.frame2, columns=('col1', 'col2', 'col3', 'col4', 'col5'), show='headings', height=12)
         
         # Настраиваем заголовки столбцов
         for i in range(5):
@@ -92,7 +120,16 @@ class TableWindow:
         # Заполняем вторую таблицу данными
         table1data = self.fill_table(self.table2, table1data, table2data)
         self.table2.pack(fill='both', expand=True)
-    
+
+                # Заголовок для первой таблицы
+                # Заголовок для второй таблицы
+        if self.label2 == None:
+            self.label2 = tk.Label(self.frame2, text=table2data.group, font=('Arial', 14, 'bold'))
+        else:
+            self.label2.destroy()
+            self.label2 = tk.Label(self.frame2, text=table2data.group, font=('Arial', 14, 'bold'))
+        self.label2.pack(pady=(0, 10))
+
     def fill_table(self, table, table_data_check, table_data: schedule):
         """Заполняет таблицу данными с белым фоном"""
         # Очищаем таблицу
@@ -107,25 +144,31 @@ class TableWindow:
         print(table_data.days_even.keys())
         print(table_data_check.days_even.keys())
         count = 0
-        for d in table_data.days_even.keys():
-            print(table_data.days_even[d].pairs.keys())
-            for p in table_data.days_even[d].pairs.keys():
-                table_data.days_even[d].pairs[p].check(table_data_check.days_even[d].pairs[p])
+        if self.parity :
+            week = table_data.days_even
+            week_check = table_data_check.days_even
+        else:
+            week = table_data.days_uneven
+            week_check = table_data_check.days_uneven
+        for d in week.keys():
+            print(week[d].pairs.keys())
+            for p in week[d].pairs.keys():
+                week[d].pairs[p].check(week_check[d].pairs[p])
                 if p == "1":
                     week_day = d
                     count += 1
                 else:
                     week_day = ''
-                values = [week_day, p, table_data.days_even[d].pairs[p].lesson
-                          , table_data.days_even[d].pairs[p].type
-                          , table_data.days_even[d].pairs[p].teacher
-                          , table_data.days_even[d].pairs[p].auditory]
+                values = [week_day, p, week[d].pairs[p].lesson
+                          , week[d].pairs[p].type
+                          , week[d].pairs[p].teacher
+                          , week[d].pairs[p].auditory]
                 print(values)
                 colors = {"Identical" : ['green3', 'green2'], 
                           "Similar" : ['LightGoldenrod2', 'khaki1'],
                           "Different" : ['coral1', 'salmon']} 
-                if discrepancy_to_show[table_data.days_even[d].pairs[p].discrepancy]:
-                    this_tag = table_data.days_even[d].pairs[p].discrepancy
+                if discrepancy_to_show[week[d].pairs[p].discrepancy]:
+                    this_tag = week[d].pairs[p].discrepancy
                 else:
                     this_tag = 'White'
                 table.insert('', 'end', values=values, tags= this_tag + str(count%2))
@@ -136,8 +179,8 @@ class TableWindow:
         table.tag_configure('Similar1', background='khaki1')
         table.tag_configure('Different0', background='coral1')
         table.tag_configure('Different1', background='salmon')
-        table.tag_configure('White1', background='White')
-        table.tag_configure('White1', background='White')
+        table.tag_configure('White0', background='White')
+        table.tag_configure('White1', background='light gray')
         return table_data_check
     '''
     PaleGreen2 / green2
@@ -160,41 +203,61 @@ class TableWindow:
         """Создает кнопки для управления цветами"""
         button_frame = tk.Frame(self.new_window)
         button_frame.pack(pady=10)
-        groups = []
-        groups1 = []
+        self.groups = []
+        self.groups1 = []
         for i in listtable1:
-            groups.append(i.group)        
+            self.groups.append(i.group)        
         for i in listtable2:
-            groups1.append(i.group)
+            self.groups1.append(i.group)
 
-        file_combobox = ttk.Combobox(self.new_window, values=groups, state="readonly", font=(20), cursor="hand2")
-        file_combobox.place(relx=0.1, rely=0.1, height=30, width=100, anchor="ne")
-        file_combobox.bind("<<ComboboxSelected>>", self.on_group_selected)
+        self.file_combobox_group1 = ttk.Combobox(self.new_window, values=self.groups, state="readonly", font=(20), cursor="hand2")
+        self.file_combobox_group1.place(relx=1, rely=0.4, height=30, width=100, anchor="ne")
+        self.file_combobox_group1.bind("<<ComboboxSelected>>", self.on_group_selected)
 
 
-        # file_combobox1 = ttk.Combobox(self.new_window, values=groups1, state="readonly", font=(20), cursor="hand2")
-        # file_combobox1.place(relx=1, rely=0.1, height=30, width=100, anchor="ne")
-        # file_combobox1.bind("<<ComboboxSelected>>", on_group_selected1)
+        self.file_combobox_group2 = ttk.Combobox(self.new_window, values=self.groups1, state="readonly", font=(20), cursor="hand2")
+        self.file_combobox_group2.place(relx=1, rely=0.9, height=30, width=100, anchor="ne")
+        self.file_combobox_group2.bind("<<ComboboxSelected>>", self.on_group_selected1)
 
         close_btn = tk.Button(button_frame, text="Закрыть", 
                              command=self.new_window.destroy, font=('Arial', 10), bg='#333', fg='white')
         close_btn.pack(side='left', padx=5)
+
+        remake_btn = tk.Button(button_frame, text="пересоздать", 
+                             command=self.create_tables, font=('Arial', 10), bg='#333', fg='white')
+        remake_btn.pack(side='left', padx=5)
+
+        self.click_parity = tk.Button(button_frame, text="ченетная", 
+                             command=self.on_button_click_parity, font=('Arial', 10), bg='#333', fg='white')
+        self.click_parity.pack(side='left', padx=5)
     # self.selected_group = ''
     # self.selected_group1 = ''
 
     def on_group_selected(self, event):
         # Обработчик выбора файла
-        # global selected_group
-        self.create_tables(table1, table2)
-        self.selected_group = file_combobox.get()
+        self.selected_group = self.file_combobox_group1.get()
         if self.selected_group:
             print(f"выбран файл: {self.selected_group}")
+        self.groupid1 = self.groups.index(self.selected_group)
+        self.create_tables()
 
-# def on_group_selected1(event):
-#     # Обработчик выбора файла
-#     # global selected_group1
-#     if selected_group1:
-#         print(f"выбран файл: {selected_group1}")
+
+    def on_group_selected1(self, event):
+        # Обработчик выбора файла
+        self.selected_group1 = self.file_combobox_group2.get()
+        if self.selected_group1:
+            print(f"выбран файл: {self.selected_group1}")
+        self.groupid2 = self.groups1.index(self.selected_group1)
+        self.create_tables()
+
+    def on_button_click_parity(self):          # кнопка выбора 2
+        print("переключение")
+        if self.parity == 0:
+            self.click_parity.config(text="четная")
+            self.parity = 1
+        else:
+            self.click_parity.config(text="ченетная")
+            self.parity = 0
 
 data_directory = "D:\\projects\\VisualStudioCode\\Laba_2_3_5_Graphics\\data"
 selected_file = "D:\\projects\\VisualStudioCode\\Laba_2_3_5_Graphics\\data\\iait_17-18-1.06.02.xls"
